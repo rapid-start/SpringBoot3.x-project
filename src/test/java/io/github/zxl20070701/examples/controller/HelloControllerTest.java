@@ -26,6 +26,7 @@ class HelloControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    // Spring Boot 3.4+ 把老的 @MockBean 改成了 @MockitoBean
     @MockitoBean
     private GreetingService greetingService;
 

@@ -4,3 +4,10 @@ server:
 spring:
   application:
     name: examples
+  sql:
+    init:
+      mode: always
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:examples}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:123456}

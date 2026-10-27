@@ -1,6 +1,6 @@
-# Spring Boot 3.x 例子
+# Spring Boot 3.x 原型
 
-基于 **IntelliJ IDEA + JDK 21 + Maven + Spring Boot 3.x + JUnit 5** 的最小可运行示例。
+基于 **IntelliJ IDEA + JDK 21 + Maven + Spring Boot 3.x + JUnit 5** 的最小可运行原型项目。
 
 ## 技术栈
 
@@ -58,16 +58,57 @@ GET http://localhost:8080/api/hello?name=zxl20070701
 { "message": "Hello, zxl20070701!", "serverTime": "2026-10-26T10:30:00" }
 ```
 
+## MySQL 操作示例
+
+示例使用 `JdbcTemplate` 演示商品的增删改查。先创建数据库：
+
+```sql
+CREATE DATABASE examples CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+配置数据库连接（也可通过 `MYSQL_HOST`、`MYSQL_PORT`、`MYSQL_DATABASE`、`MYSQL_USERNAME` 和 `MYSQL_PASSWORD` 环境变量覆盖）：
+
+```bash
+export MYSQL_HOST=localhost
+export MYSQL_PORT=3306
+export MYSQL_DATABASE=examples
+export MYSQL_USERNAME=root
+export MYSQL_PASSWORD=your-password
+mvn spring-boot:run
+```
+
+应用启动时会执行 `schema.sql` 创建 `product` 表。接口示例：
+
+```bash
+# 新增
+curl -X POST http://localhost:8080/api/products \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"键盘","price":299.00}'
+
+# 查询列表、查询单条
+curl http://localhost:8080/api/products
+curl http://localhost:8080/api/products/1
+
+# 修改、删除
+curl -X PUT http://localhost:8080/api/products/1 \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"机械键盘","price":399.00}'
+curl -X DELETE http://localhost:8080/api/products/1
+```
+
+测试使用 H2 内存数据库，不需要启动 MySQL 服务。
+
 ## 运行测试
 
 ```bash
 mvn test
 ```
 
-包含三类测试，分别演示不同的测试写法：
+包含以下测试，分别演示不同的测试写法：
 - `GreetingServiceTest`：纯单元测试，不启动 Spring，最快。
 - `HelloControllerTest`：`@WebMvcTest` 切片测试，用 MockMvc 测接口。
 - `ExamplesApplicationTests`：`@SpringBootTest` 集成测试，加载完整上下文。
+- `ProductServiceIntegrationTest`：使用 H2 内存数据库验证 MySQL CRUD 操作。
 
 ## 打包
 
